@@ -1,0 +1,21 @@
+# Copier dans ~/.config/silverblue-fleet/inventory.toml
+
+[settings]
+max_parallel = 8          # postes traités simultanément
+connect_timeout = 10      # secondes
+# identity_file = "/home/admin/.ssh/id_ed25519_parc"
+flatpak_remote = "flathub"
+
+[[host]]
+name = "accueil-01"
+address = "accueil-01.example.lan"
+user = "admin"            # « root » : pas de sudo ; sinon « sudo -n » est utilisé
+groups = ["accueil"]
+
+[[host]]
+name = "compta-01"
+address = "192.168.10.21"
+user = "admin"
+port = 2222
+groups = ["compta", "batiment-b"]
+notes = "Poste de la responsable comptable"

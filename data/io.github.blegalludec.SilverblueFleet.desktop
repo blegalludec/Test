@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Parc Silverblue
+GenericName=Administration de parc
+Comment=Administrer un parc de postes Fedora Silverblue
+Exec=silverblue-fleet
+Icon=computer-symbolic
+Terminal=false
+Categories=System;Settings;GTK;
+Keywords=rpm-ostree;silverblue;flatpak;fleet;parc;
+StartupNotify=true

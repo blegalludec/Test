@@ -1,0 +1,16 @@
+# /etc/sudoers.d/silverblue-fleet
+# Vérifier avant installation :  visudo -cf data/sudoers.silverblue-fleet
+#
+# Autorise le compte d'administration à piloter rpm-ostree, flatpak et le
+# redémarrage sans mot de passe (l'outil utilise « sudo -n » et n'est jamais
+# interactif). Remplacez « admin » par le compte SSH déclaré dans l'inventaire.
+# Inutile si l'inventaire utilise user = "root".
+
+Cmnd_Alias FLEET_OSTREE  = /usr/bin/rpm-ostree
+Cmnd_Alias FLEET_FLATPAK = /usr/bin/flatpak
+Cmnd_Alias FLEET_POWER   = /usr/bin/systemctl reboot
+Cmnd_Alias FLEET_AUTOUPD = /usr/bin/systemctl enable --now rpm-ostreed-automatic.timer, \
+                           /usr/bin/systemctl disable --now rpm-ostreed-automatic.timer, \
+                           /usr/bin/tee /etc/rpm-ostreed.conf
+
+admin ALL=(root) NOPASSWD: FLEET_OSTREE, FLEET_FLATPAK, FLEET_POWER, FLEET_AUTOUPD
