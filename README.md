@@ -110,6 +110,49 @@ Installation locale facultative :
 install -Dm755 target/release/silverblue-fleet ~/.local/bin/silverblue-fleet
 install -Dm644 data/io.github.blegalludec.SilverblueFleet.desktop \
   ~/.local/share/applications/io.github.blegalludec.SilverblueFleet.desktop
+install -Dm644 data/icons/hicolor/scalable/apps/io.github.blegalludec.SilverblueFleet.svg \
+  ~/.local/share/icons/hicolor/scalable/apps/io.github.blegalludec.SilverblueFleet.svg
+```
+
+## Flatpak
+
+Le manifeste [`build-aux/flatpak/io.github.blegalludec.SilverblueFleet.yml`](build-aux/flatpak/io.github.blegalludec.SilverblueFleet.yml)
+s'appuie sur le runtime GNOME 49 et embarque son propre client OpenSSH. C'est
+la méthode recommandée sur Silverblue, sans toolbox ni superposition de paquets :
+
+```sh
+flatpak install --user flathub org.gnome.Sdk//49 org.freedesktop.Sdk.Extension.rust-stable//25.08
+flatpak install --user flathub org.flatpak.Builder
+flatpak run org.flatpak.Builder --user --install --force-clean build-dir \
+  build-aux/flatpak/io.github.blegalludec.SilverblueFleet.yml
+flatpak run io.github.blegalludec.SilverblueFleet
+```
+
+Pour produire un fichier `.flatpak` à distribuer sur d'autres postes :
+
+```sh
+flatpak run org.flatpak.Builder --repo=repo --force-clean build-dir \
+  build-aux/flatpak/io.github.blegalludec.SilverblueFleet.yml
+flatpak build-bundle repo silverblue-fleet.flatpak io.github.blegalludec.SilverblueFleet
+flatpak install --user silverblue-fleet.flatpak
+```
+
+La CI GitHub construit aussi ce bundle à chaque push (artefact
+`silverblue-fleet.flatpak`).
+
+Permissions demandées : réseau, agent SSH de la session (`--socket=ssh-auth`)
+et accès à `~/.ssh` (clés, `config`, `known_hosts`). Dans le Flatpak,
+l'inventaire par défaut se trouve dans
+`~/.var/app/io.github.blegalludec.SilverblueFleet/config/silverblue-fleet/inventory.toml`.
+Pour utiliser un inventaire situé ailleurs, autorisez son dossier :
+`flatpak override --user --filesystem=~/parc:ro io.github.blegalludec.SilverblueFleet`.
+
+Le dossier `cargo/vendor` utilisé pour la compilation hors ligne est décrit
+par `build-aux/flatpak/cargo-sources.json`. Après toute modification de
+`Cargo.lock`, régénérez-le (la CI vérifie qu'il est à jour) :
+
+```sh
+build-aux/flatpak/generate-cargo-sources.py
 ```
 
 Raccourcis : `Ctrl+N` ajouter un poste, `Ctrl+R` actualiser l'état.
@@ -136,6 +179,8 @@ des mises à jour automatiques sur une copie de `rpm-ostreed.conf`.
 | `src/ostree.rs` | Analyse de `rpm-ostree status --json` |
 | `src/runner.rs` | File d'exécution parallèle hors du thread GTK |
 | `src/ui/` | Fenêtre principale et dialogue d'édition des postes |
+| `build-aux/flatpak/` | Manifeste Flatpak et sources Cargo hors ligne |
+| `data/` | Fichier .desktop, métadonnées AppStream, icônes, exemples |
 
 ## Licence
 

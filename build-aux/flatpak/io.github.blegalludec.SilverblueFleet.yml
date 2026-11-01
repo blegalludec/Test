@@ -1,0 +1,79 @@
+id: io.github.blegalludec.SilverblueFleet
+runtime: org.gnome.Platform
+runtime-version: '49'
+sdk: org.gnome.Sdk
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.rust-stable
+command: silverblue-fleet
+
+finish-args:
+  - --share=ipc
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --device=dri
+  # Connexions SSH vers les postes du parc.
+  - --share=network
+  # Agent SSH de la session (clés déverrouillées, cartes à puce…).
+  - --socket=ssh-auth
+  # Clés, ~/.ssh/config et known_hosts (écrit au premier contact avec un poste).
+  - --filesystem=~/.ssh
+
+build-options:
+  append-path: /usr/lib/sdk/rust-stable/bin
+
+cleanup:
+  - /include
+  - /lib/pkgconfig
+  - /share/man
+
+modules:
+  # Client OpenSSH : le runtime GNOME n'en garantit pas la présence et
+  # l'application doit pouvoir l'appeler depuis le bac à sable.
+  - name: openssh
+    buildsystem: simple
+    build-commands:
+      - autoreconf -fi
+      - >-
+        ./configure --prefix=/app
+        --sysconfdir=/app/etc/ssh
+        --without-pam
+        --without-selinux
+        --without-kerberos5
+        --without-zlib-version-check
+        --disable-strip
+      - make -j "$FLATPAK_BUILDER_N_JOBS" ssh
+      - install -Dm755 ssh /app/bin/ssh
+    sources:
+      - type: git
+        url: https://github.com/openssh/openssh-portable.git
+        tag: V_10_6_P1
+        commit: a8c72b842423f0774f542d3c2197247c3dd28d74
+
+  - name: silverblue-fleet
+    buildsystem: simple
+    build-options:
+      env:
+        CARGO_HOME: /run/build/silverblue-fleet/cargo
+        CARGO_NET_OFFLINE: 'true'
+    build-commands:
+      - cargo --offline build --release --locked
+      - install -Dm755 target/release/silverblue-fleet /app/bin/silverblue-fleet
+      - install -Dm644 data/io.github.blegalludec.SilverblueFleet.desktop
+        /app/share/applications/io.github.blegalludec.SilverblueFleet.desktop
+      - install -Dm644 data/io.github.blegalludec.SilverblueFleet.metainfo.xml
+        /app/share/metainfo/io.github.blegalludec.SilverblueFleet.metainfo.xml
+      - install -Dm644 data/icons/hicolor/scalable/apps/io.github.blegalludec.SilverblueFleet.svg
+        /app/share/icons/hicolor/scalable/apps/io.github.blegalludec.SilverblueFleet.svg
+      - install -Dm644 data/icons/hicolor/symbolic/apps/io.github.blegalludec.SilverblueFleet-symbolic.svg
+        /app/share/icons/hicolor/symbolic/apps/io.github.blegalludec.SilverblueFleet-symbolic.svg
+    sources:
+      - type: dir
+        path: ../..
+        skip:
+          - target
+          - .flatpak-builder
+          - build-dir
+          - repo
+      # Dépendances Rust téléchargées à l'avance (pas de réseau pendant la
+      # compilation). Régénérer avec generate-cargo-sources.py.
+      - cargo-sources.json

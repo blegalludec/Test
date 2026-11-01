@@ -17,3 +17,24 @@ jobs:
       - run: cargo fmt --check
       - run: cargo clippy --all-targets -- -D warnings
       - run: cargo test
+      - name: cargo-sources.json à jour
+        run: |
+          python3 build-aux/flatpak/generate-cargo-sources.py
+          git diff --exit-code build-aux/flatpak/cargo-sources.json
+
+  flatpak:
+    runs-on: ubuntu-24.04
+    container:
+      image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-49
+      options: --privileged
+    steps:
+      - uses: actions/checkout@v4
+      - name: Valider .desktop et AppStream
+        run: |
+          desktop-file-validate data/io.github.blegalludec.SilverblueFleet.desktop
+          appstreamcli validate --no-net data/io.github.blegalludec.SilverblueFleet.metainfo.xml
+      - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        with:
+          bundle: silverblue-fleet.flatpak
+          manifest-path: build-aux/flatpak/io.github.blegalludec.SilverblueFleet.yml
+          cache-key: flatpak-builder-${{ github.sha }}

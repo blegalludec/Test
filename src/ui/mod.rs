@@ -389,6 +389,7 @@ impl Window {
         let window = adw::ApplicationWindow::builder()
             .application(app)
             .title("Parc Silverblue")
+            .icon_name(app_icon())
             .default_width(1200)
             .default_height(820)
             .content(&toolbar)
@@ -615,7 +616,7 @@ impl Window {
             Box::new(|w| {
                 let about = adw::AboutDialog::builder()
                     .application_name("Parc Silverblue")
-                    .application_icon("computer-symbolic")
+                    .application_icon(app_icon())
                     .version(env!("CARGO_PKG_VERSION"))
                     .comments("Administration d'un parc de postes Fedora Silverblue via SSH et rpm-ostree.")
                     .license_type(gtk::License::Gpl30)
@@ -1163,6 +1164,19 @@ impl Window {
         if let Some(mark) = buf.mark("end") {
             self.log_view.scroll_to_mark(&mark, 0.0, false, 0.0, 1.0);
         }
+    }
+}
+
+/// Icône de l'application si elle est installée (Flatpak, paquet), sinon une
+/// icône générique pour une exécution depuis les sources.
+fn app_icon() -> &'static str {
+    let installed = gtk::gdk::Display::default()
+        .map(|d| gtk::IconTheme::for_display(&d).has_icon(crate::APP_ID))
+        .unwrap_or(false);
+    if installed {
+        crate::APP_ID
+    } else {
+        "computer-symbolic"
     }
 }
 

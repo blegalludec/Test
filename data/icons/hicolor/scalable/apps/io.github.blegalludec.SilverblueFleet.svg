@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#62a0ea"/>
+      <stop offset="1" stop-color="#1a5fb4"/>
+    </linearGradient>
+    <linearGradient id="screen" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#deddda"/>
+    </linearGradient>
+  </defs>
+  <rect x="8" y="12" width="112" height="104" rx="20" fill="#1c4f8f"/>
+  <rect x="8" y="8" width="112" height="104" rx="20" fill="url(#bg)"/>
+  <!-- trois postes du parc -->
+  <g fill="url(#screen)">
+    <rect x="20" y="24" width="38" height="26" rx="4"/>
+    <rect x="70" y="24" width="38" height="26" rx="4"/>
+    <rect x="45" y="62" width="38" height="26" rx="4"/>
+  </g>
+  <g fill="#c0bfbc">
+    <rect x="35" y="50" width="8" height="5"/>
+    <rect x="85" y="50" width="8" height="5"/>
+    <rect x="60" y="88" width="8" height="5"/>
+    <rect x="29" y="55" width="20" height="3" rx="1.5"/>
+    <rect x="79" y="55" width="20" height="3" rx="1.5"/>
+    <rect x="54" y="93" width="20" height="3" rx="1.5"/>
+  </g>
+  <!-- liaisons d'administration -->
+  <g stroke="#ffffff" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.85">
+    <path d="M39 59 L52 66"/>
+    <path d="M89 59 L76 66"/>
+  </g>
+  <!-- pastille « à jour » -->
+  <circle cx="98" cy="92" r="14" fill="#2ec27e" stroke="#ffffff" stroke-width="3"/>
+  <path d="M91 92 l5 5 l9 -10" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>

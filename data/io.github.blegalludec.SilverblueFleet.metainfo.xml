@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.blegalludec.SilverblueFleet</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <name>Parc Silverblue</name>
+  <summary>Administrer un parc de postes Fedora Silverblue</summary>
+  <developer id="io.github.blegalludec">
+    <name>blegalludec</name>
+  </developer>
+  <description>
+    <p>
+      Parc Silverblue administre à distance, par SSH et sans agent, des postes
+      Fedora Silverblue et autres systèmes rpm-ostree.
+    </p>
+    <ul>
+      <li>Inventaire des postes avec groupes et recherche</li>
+      <li>État des déploiements : version, source, paquets superposés, redémarrage requis</li>
+      <li>Mises à jour, retour arrière, rebase et paquets superposés sur plusieurs postes en parallèle</li>
+      <li>Réglage des mises à jour automatiques</li>
+      <li>Gestion des Flatpak système</li>
+      <li>Journal détaillé de toutes les opérations</li>
+    </ul>
+  </description>
+  <launchable type="desktop-id">io.github.blegalludec.SilverblueFleet.desktop</launchable>
+  <url type="homepage">https://github.com/blegalludec/Test</url>
+  <url type="bugtracker">https://github.com/blegalludec/Test/issues</url>
+  <screenshots>
+    <screenshot type="default">
+      <caption>État d'un poste et actions disponibles</caption>
+      <image>https://raw.githubusercontent.com/blegalludec/Test/main/data/screenshot.png</image>
+    </screenshot>
+  </screenshots>
+  <content_rating type="oars-1.1"/>
+  <requires>
+    <display_length compare="ge">900</display_length>
+  </requires>
+  <supports>
+    <control>keyboard</control>
+    <control>pointing</control>
+  </supports>
+  <categories>
+    <category>System</category>
+  </categories>
+  <keywords>
+    <keyword>rpm-ostree</keyword>
+    <keyword>silverblue</keyword>
+    <keyword>parc</keyword>
+    <keyword>fleet</keyword>
+  </keywords>
+  <releases>
+    <release version="0.1.0" date="2026-11-01">
+      <description>
+        <p>Première version.</p>
+      </description>
+    </release>
+  </releases>
+</component>
